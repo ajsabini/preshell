@@ -1,29 +1,29 @@
 #include "main.h"
 
 /**
- * addnode - agrega un token
+ * add_node - agrega un token
  * @head: pasamos la direccion del head y lo recibe como doble puntero
  * @s: el token
  * Return: void
  */
 
-void addnode(tokeniza **head, char *s)
+void add_node(tokeniza **head, char *s)
 {
 	tokeniza *headaux = *head;
 	tokeniza *new;
 
 	if (s == NULL)
-		printf("error al crear la lista\n");
+		dprintf(1, "error al crear la lista\n");
 	else
 	{
 		new = malloc(sizeof(tokeniza));
 		if (new == NULL)
 		{
-			printf("error al crear la lisa\n");
+			dprintf(1, "error al crear la lisa\n");
 		}
 		else
 		{
-			new->s = s;
+			new->s = strdup(s);
 			new->next = NULL;
 
 			if (s && *head)
@@ -57,7 +57,7 @@ void tokenizer(char *env, tokeniza **directorys, const char *delim)
 	path = strtok(env, delim);
 	while (path != NULL)
 	{
-		addnode(directorys, path);
+		add_node(directorys, path);
 		path = strtok(NULL, delim);
 	}
 }
@@ -67,6 +67,7 @@ void tokenizer(char *env, tokeniza **directorys, const char *delim)
  * @head: primer nodo
  * Return: void
  */
+
 void free_nodes(tokeniza *head)
 {
 	tokeniza *aux = head;
@@ -76,6 +77,7 @@ void free_nodes(tokeniza *head)
 	{
 			auxfree = aux;
 			aux = aux->next;
+			free(auxfree->s);
 			free(auxfree);
 		}
 }

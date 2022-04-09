@@ -13,12 +13,12 @@ int check_directory(tokeniza *input)
 
 	stat = get_stat(input->s);
 	if (stat != 0)
-		dprintf(2, "No es un archivo ni un directorio\n");
+		perror("");
 	else
 	{
 		file = regular_file(input->s);
 		if (file == 0)
-			dprintf(2, "Es un directorio\n");
+			perror("");
 		else
 		{
 			path_concat = input->s;
@@ -34,7 +34,6 @@ int check_directory(tokeniza *input)
  * @input: el token
  * Return - lo que nos da command
 */
-
 int check_files(tokeniza *directorys, tokeniza *input)
 {
 	char *path_concat = NULL;
@@ -42,7 +41,7 @@ int check_files(tokeniza *directorys, tokeniza *input)
 
 	path_concat =_concat(directorys, input);
 	if (strcmp(path_concat, "ERROR") == 0)
-		dprintf(2, "Comando no encontrado\n");
+		perror("");
 	else
 	{
 			status = command(input, path_concat);

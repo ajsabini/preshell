@@ -49,77 +49,86 @@ int command(tokeniza *head, char *path_concat)
 }
 
 /**
- * getpath - obtiene el path del environ
- * Return: environ
- */
-
-char *getpath()
-{
-	extern char **environ;
-	char *pathcompare = "PATH=";
-	int i = 0, j = 0;
-
-	for (i = 0; environ[i]; i++)
-	{
-		for (j = 0; pathcompare[j]; j++)
-		{
-			if (*(environ[i]) == pathcompare[j])
-			{
-				environ[i]++;
-			}
-			else
-				break;
-		}
-		if (j == 5)
-		{
-			break;
-		}
-	}
-	return (environ[i]);
-}
-
-/**
- * _signal - captura la senial ctrl+c
+ * _fsignal - captura la senial ctrl+c
  * @sig: la senial
  * Return - void
  */
 
-void _signal(int sig)
+void _fsignal(int sig)
 {
 	if (SIGINT == sig)
 	{
-		dprintf(STDIN_FILENO, "\nMY-SHELL: ");
+		dprintf(STDIN_FILENO, "\nOSHELL: ");
 	}
 }
 
 /**
- * fexit - captura el exit y lo ejecuta
+ * _fexit - captura el exit y lo ejecuta
  * @buffer: lo que se ingreso
  * Return - int
  */
 
-int fexit(char *buffer)
+int _fexit(char *buffer)
 {
 	char *exit = "exit";
 	int i = 0, j = 0;
 
 	for (i = 0; buffer[i]; i++)
 	{
-		if (buffer[i] == exit[j])
+		if (buffer[i] == ' ')
+				;
+		else
 		{
-			j++;
-			if (j == 4)
-			{
-				while (buffer[i])
+			if (buffer[i] == exit[j])
+			{	
+				while (j < 5)
 				{
-					i++;	
-					if (buffer[i] != ' ')
-					return (0);
+					if (j == 4)
+					{
+						while (j < 5)
+						{
+							i++;
+							if (buffer[i] == '\0')
+								return (1);
+							if (buffer[i] != ' ')
+								return(0);
+						}
+					}
+					if (buffer[i] == exit[j])
+					{
+						i++;
+						j++;
+					}
+					else
+						return (0);
 				}
 			}
-		}
-		
+			else
+				return (0);
+		}		
 	}
-	return (1);
+	return (0);	
 }
 
+/**
+ * cpy_eniron - copiamos el environ
+ * Return - la copia del 
+ */
+
+char **cpy_environ()
+{
+	int i = 0;
+	char **envir;
+
+	for (i = 0; environ[i]; i++)
+	;
+	
+	envir = malloc(i * (sizeof(char *)));
+
+	for (i = 0; environ[i]; i++)
+	{
+		envir[i] = strdup(environ[i]);
+	}
+	envir[i] = NULL;
+	return (envir);
+}
